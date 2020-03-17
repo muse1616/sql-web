@@ -55,8 +55,11 @@
         <!-- <el-button type="primary" @click="logout">退出</el-button> -->
       </div>
       <el-main>
-        <!-- 路由占位符 -->
-        <router-view></router-view>
+        <!-- 不刷新组件 保持状态 -->
+        <keep-alive>
+          <!-- 路由占位符 -->
+          <router-view></router-view>
+        </keep-alive>
       </el-main>
     </el-container>
   </el-container>

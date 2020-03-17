@@ -1,6 +1,7 @@
 <!--  -->
 <template>
-  <div>班级管理</div>
+  <div>班级管理<input type="text"></div>
+  
 </template>
 
 <script>

@@ -83,7 +83,13 @@ export default {
       this.$router.push('/login');
     }
   },
-  created() {}
+  created() {
+      console.log(this.id)
+      if(this.id==null){
+           // 重定向到登录页
+      this.$router.push('/login');
+      }
+  }
 };
 </script>
 

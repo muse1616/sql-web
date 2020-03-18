@@ -17,3 +17,20 @@ body,
 .el-pagination {
   margin-top: 15px;
 }
+.el-scrollbar__wrap {
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 0 !important;
+}
+::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0;
+}
+.el-tag{
+  margin-left: 10px;
+}
+.el-table{
+  text-align: center;
+}

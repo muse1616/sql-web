@@ -1,18 +1,22 @@
 <!--  -->
 <template>
-  <div>班级管理<input type="text"></div>
-  
+  <div>
+    <!-- 面包屑导航 -->
+    <el-breadcrumb separator-class="el-icon-arrow-right">
+      <el-breadcrumb-item>教师页</el-breadcrumb-item>
+      <el-breadcrumb-item
+        ><span style="font-weight:bolder">班级管理</span></el-breadcrumb-item
+      >
+    </el-breadcrumb>
+  </div>
 </template>
 
 <script>
 export default {
-  data () {
-    return {
-    };
+  data() {
+    return {};
   },
   methods: {}
-}
-
+};
 </script>
-<style scoped>
-</style>
+<style scoped></style>

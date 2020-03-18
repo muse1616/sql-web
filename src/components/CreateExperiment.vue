@@ -1,17 +1,22 @@
 <!--  -->
 <template>
-  <div>创建实验</div>
+  <div>
+    <!-- 面包屑导航 -->
+    <el-breadcrumb separator-class="el-icon-arrow-right">
+      <el-breadcrumb-item>教师页</el-breadcrumb-item>
+      <el-breadcrumb-item
+        ><span style="font-weight:bolder">创建实验</span></el-breadcrumb-item
+      >
+    </el-breadcrumb>
+  </div>
 </template>
 
 <script>
 export default {
-  data () {
-    return {
-    };
+  data() {
+    return {};
   },
   methods: {}
-}
-
+};
 </script>
-<style scoped>
-</style>
+<style scoped></style>

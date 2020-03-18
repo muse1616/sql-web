@@ -35,7 +35,9 @@ import {
     Divider,
     Upload,
     Confirm,
-    MessageBox
+    MessageBox,
+    Tabs,
+    TabPane
 } from 'element-ui'
 
 
@@ -71,6 +73,8 @@ Vue.use(Collapse)
 Vue.use(CollapseItem)
 Vue.use(Divider)
 Vue.use(Upload)
+Vue.use(TabPane)
+Vue.use(Tabs)
 
 // 消息弹窗需要全局挂载
 Vue.prototype.$message = Message

@@ -46,10 +46,10 @@
         </div>
       </el-col>
       <el-col :span="21">
-        <el-alert title="第二行为字段类型"  type="info" show-icon> </el-alert>
+        <el-alert title="第二行为字段类型" type="info" show-icon> </el-alert>
 
         <el-collapse v-model="activeNames">
-          <el-collapse-item title="收起" name="1">
+          <el-collapse-item title="收起表格" name="1">
             <!-- 表格区域 -->
             <el-table
               :data="tableData"
@@ -68,6 +68,44 @@
             </el-table>
           </el-collapse-item>
         </el-collapse>
+
+        <el-collapse v-model="activeNames">
+          <el-collapse-item
+            title="上传SQL文件实现操作数据库、创建表等操作"
+            name="2"
+          >
+            <el-upload
+              class="upload-demo"
+              action=""
+              ref="upload"
+              :on-change="handleChange"
+              :file-list="fileList"
+              accept=".sql"
+              :auto-upload="false"
+              :limit="1"
+              :on-exceed="handleExceed"
+            >
+              <el-button slot="trigger" size="small" type="primary"
+                >选择Sql文件</el-button
+              >
+              <el-button
+                size="small"
+                type="primary"
+                style="margin-left:10px"
+                @click="submitScript"
+                >上传</el-button
+              >
+              <div slot="tip" class="el-upload__tip">
+                只能上传sql文件，且一次上传一个脚本
+              </div>
+            </el-upload>
+          </el-collapse-item>
+        </el-collapse>
+
+        <el-collapse v-model="activeNames">
+          <el-collapse-item title="可视化界面创建表(Beta)" name="3">
+          </el-collapse-item>
+        </el-collapse>
       </el-col>
     </el-row>
   </div>
@@ -77,18 +115,64 @@
 export default {
   data() {
     return {
-      activeNames: ['1'],
+      query: '',
+      activeNames: ['1', '2', '3'],
       id: window.localStorage.getItem('user_id'),
-      tables: null,
+      tables: null,     
       current_table: {
         name: ''
       },
       fieldArr: [],
       // 显示表的数据
-      tableData: [{}]
+      tableData: [],
+      fileList: [],
+      script: ''
     };
   },
   methods: {
+    handleExceed(files, fileList) {
+      this.$message.warning(`当前限制选择 1 个文件`);
+    },
+    async submitScript() {
+      const { data: res } = await this.$http.post('script/receive', {
+        id: this.id,
+        script: this.script
+      });
+      if (res.status == 200) {
+        this.$message.success('上传成功');
+        window.location.reload();
+      } else if (res.status == 202) {
+        this.$message.error('登录状态已失效!请先登录');
+        // 重定向到登录页
+        this.$router.push('/login');
+      } else if (res.status == 201) {
+        this.$message.error('脚本错误:' + res.data);
+      } else {
+        this.$message.error('服务器错误');
+      }
+    },
+    async beforeUpload(file) {
+      // console.log(file.raw);
+    },
+    handleChange(file, fileList) {
+      var _this = this;
+      new Promise((resolve, reject) => {
+        if (file.raw) {
+          let reader = new FileReader();
+          reader.onload = function(e) {
+            _this.contentHtml = e.target.result;
+            // console.log(_this.contentHtml);
+            return resolve(_this.contentHtml);
+          };
+          reader.readAsText(file.raw, 'utf-8');
+        }
+        this.script = _this.contentHtml;
+      }).then(data => {
+        this.script = data;
+      });
+      // console.log('123');
+    },
+
     async refreshDatabase() {
       const { data: res } = await this.$http.post('getTable', { id: this.id });
       if (res.status == 202) {

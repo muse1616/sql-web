@@ -31,7 +31,11 @@ import {
     Tag,
     Alert,
     Collapse,
-    CollapseItem
+    CollapseItem,
+    Divider,
+    Upload,
+    Confirm,
+    MessageBox
 } from 'element-ui'
 
 
@@ -65,6 +69,9 @@ Vue.use(Tag)
 Vue.use(Alert)
 Vue.use(Collapse)
 Vue.use(CollapseItem)
+Vue.use(Divider)
+Vue.use(Upload)
 
 // 消息弹窗需要全局挂载
 Vue.prototype.$message = Message
+Vue.prototype.$confirm = MessageBox.confirm

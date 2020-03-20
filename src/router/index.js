@@ -28,6 +28,7 @@ const routes = [
   {
     path: '/teacher/home',
     name: '/teacher/home',
+    redirect:'/teacher/home/experiment/create',
     component: TeacherHome,
     // 子路由
     children:[{

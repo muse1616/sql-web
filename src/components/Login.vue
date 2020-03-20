@@ -2,7 +2,7 @@
   <div class="login_container" :style="bkg">
     <!-- 登录盒 -->
     <div class="login_box">
-      <div class="title">SQL-LAB 登录</div>
+      <div class="title"><span style="font-weight:bolder;font-size:40px">登录</span></div>
       <!-- 表单区域 -->
       <el-form
         ref="loginFormRef"
@@ -118,6 +118,13 @@ export default {
           this.$router.push({ name: '/teacher/home', params: res.meta.data });
         }
         // 学生
+        if (this.t == 'student') {
+          window.localStorage.setItem('user_id', res.meta.data.id);
+          window.localStorage.setItem('class_id', res.meta.data.class_id);
+          window.localStorage.setItem('name', res.meta.data.name);
+          window.localStorage.setItem('teacher_id', res.meta.data.teacher_id);
+          this.$router.push({ name: '/student/home', params: res.meta.data });
+        }
       });
     }
   }

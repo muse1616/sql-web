@@ -266,9 +266,7 @@ export default {
             rowObj[this.fieldArr[j]] = rowArr[j];
           }
           this.tableData[i + 1] = rowObj;
-          // console.log(rowArr);
-
-          // console.log(res.data.rows[i]);
+     
         }
       } else {
         this.$message.error('服务器错误');

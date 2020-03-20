@@ -37,7 +37,14 @@ import {
     Confirm,
     MessageBox,
     Tabs,
-    TabPane
+    TabPane,
+    Step,
+    Steps,
+    ButtonGroup,
+    Transfer,
+    DatePicker,
+    Drawer,
+    InputNumber
 } from 'element-ui'
 
 
@@ -75,7 +82,15 @@ Vue.use(Divider)
 Vue.use(Upload)
 Vue.use(TabPane)
 Vue.use(Tabs)
+Vue.use(Step)
+Vue.use(Steps)
+Vue.use(ButtonGroup)
+Vue.use(Transfer)
+Vue.use(DatePicker)
+Vue.use(Drawer)
+Vue.use(InputNumber)
 
 // 消息弹窗需要全局挂载
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm
+Vue.prototype.$prompt = MessageBox.prompt

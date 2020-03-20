@@ -12,6 +12,15 @@
       <el-col :span="12">
         <el-tag>当前数据库:{{ id }}</el-tag>
         <el-tag type="success">当前表名:{{ current_table.name }}</el-tag>
+        <el-button
+          type="danger"
+          @click="deleteTable"
+          plain
+          size="small"
+          style="margin-left:10px"
+        >
+          删除当前表:{{ current_table.name }}
+        </el-button>
       </el-col>
       <el-col :span="12"
         ><el-button
@@ -118,7 +127,7 @@ export default {
       query: '',
       activeNames: ['1', '2', '3'],
       id: window.localStorage.getItem('user_id'),
-      tables: null,     
+      tables: null,
       current_table: {
         name: ''
       },
@@ -130,6 +139,37 @@ export default {
     };
   },
   methods: {
+    async deleteTable() {
+      this.$confirm('确定删除当前表？不能还原', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(async () => {
+          const { data: res } = await this.$http.post('delete/table', {
+            id: this.id,
+            table: this.current_table.name
+          });
+          if (res.status == 200) {
+            this.$message.success('删除成功');
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          } else if (res.status == 202) {
+            this.$message.error('登录状态已失效!请先登录');
+            // 重定向到登录页
+            this.$router.push('/login');
+          } else {
+            this.$message.error('未知错误');
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          });
+        });
+    },
     handleExceed(files, fileList) {
       this.$message.warning(`当前限制选择 1 个文件`);
     },
@@ -140,7 +180,9 @@ export default {
       });
       if (res.status == 200) {
         this.$message.success('上传成功');
-        window.location.reload();
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       } else if (res.status == 202) {
         this.$message.error('登录状态已失效!请先登录');
         // 重定向到登录页
@@ -182,7 +224,6 @@ export default {
       } else if (res.status == 200) {
         this.$message.success('刷新成功');
         this.tables = res.data;
-        // this.current_table.name = res.data[0];
       } else {
         this.$message.error('未知错误!刷新失败');
       }

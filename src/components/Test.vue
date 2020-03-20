@@ -7,16 +7,44 @@
         点击弹出sql语句测试面板
       </el-button>
       <el-alert
-        title="运行SQL使用临时库表,不会影响原表"
+        title="运行SQL使用临时库表,不会影响原表;sql语句请完整使用``符号"
         @click="drawer = true"
         type="info"
         show-icon
       >
       </el-alert>
     </div>
+    <!-- 题目区域 -->
 
+    <el-card class="box-card" style="margin-top:20px;min-height:250px">
+      <div v-for="(item, i) in problem" :key="i" v-show="count == `${i + 1}`">
+        <h2>问题{{ i + 1 }}.{{ item }}</h2>
+        <el-input v-model="answer[i]" style="margin-top:60px">
+          <template slot="prepend">答案</template>
+        </el-input>
+      </div>
+    </el-card>
+
+    <el-button-group>
+      <el-button
+        type="primary"
+        icon="el-icon-arrow-left"
+        :disabled="count == 1"
+        @click="count--"
+        >上一题</el-button
+      >
+      <el-button type="primary" :disabled="count == all" @click="count++"
+        >下一题<i class="el-icon-arrow-right el-icon--right"></i
+      ></el-button>
+      <el-button
+        type="success"
+        @click="submit"
+        v-if="count == all"
+        icon="el-icon-upload2"
+        >提交
+      </el-button>
+    </el-button-group>
     <el-divider></el-divider>
-
     <el-collapse>
       <el-collapse-item title="打开实验关联库表">
         <!-- 渲染库表 -->
@@ -128,10 +156,46 @@ export default {
       sql_table: '',
       sql_type: '',
       sql_test: '',
-      fieldArr2: []
+      fieldArr2: [],
+      problem: [],
+      count: 1,
+      all: null,
+      answer: []
     };
   },
   methods: {
+    async submit() {
+      for (let i = 0; i < this.answer.length; i++) {
+        if (this.answer[i] == '') {
+          return this.$message({
+            type: 'warning',
+            message: '第' + (i + 1) + '题尚未作答'
+          });
+        }
+      }
+
+      const { data: res } = await this.$http.post('test/submit', {
+        id: window.localStorage.getItem('user_id'),
+        teacher_id: window.localStorage.getItem('teacher_id'),
+        test_name: this.$route.params.test_name,
+        answer: this.answer
+      });
+      // 渲染结果
+      if (res.status == 202) {
+        this.$message.error('登录状态已失效!请先登录');
+        // 重定向到登录页
+        this.$router.push('/login');
+      } else if (res.status == 200) {
+        this.$message.success('提交成功');
+
+        setTimeout(() => {
+          // 重定向到主页
+          this.$router.push('/student/home');
+        }, 1000);
+      } else {
+        this.$message.error('提交失败，服务器异常');
+      }
+    },
     async runSql() {
       if (this.sql_test == '') {
         return this.$message({
@@ -203,36 +267,36 @@ export default {
       }
     }
   },
-  beforeRouteLeave: function(to, from, next) {
-    next(false);
-    this.$confirm('您将离开本页面，作答记录不会保存,继续离开？', '提示', {
-      distinguishCancelAndClose: true,
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
-    })
-      .then(() => {
-        //   删除临时表
-        //   可以不进行删除？
+  //   beforeRouteLeave: function(to, from, next) {
+  //     next(false);
+  //     this.$confirm('您将离开本页面，作答记录不会保存,继续离开？', '提示', {
+  //       distinguishCancelAndClose: true,
+  //       confirmButtonText: '确定',
+  //       cancelButtonText: '取消',
+  //       type: 'warning'
+  //     })
+  //       .then(() => {
+  //         //   删除临时表
+  //         //   可以不进行删除？
 
-        next();
-      })
-      .catch(() => {});
-  },
-  mounted() {
-    window.onbeforeunload = function(e) {
-      e = e || window.event;
-      // 兼容IE8和Firefox 4之前的版本
-      if (e) {
-        e.returnValue = '关闭提示';
-      }
-      // Chrome, Safari, Firefox 4+, Opera 12+ , IE 9+
-      return '关闭提示';
-    };
-  },
-  destroyed() {
-    window.onbeforeunload = null;
-  },
+  //         next();
+  //       })
+  //       .catch(() => {});
+  //   },
+  //   mounted() {
+  //     window.onbeforeunload = function(e) {
+  //       e = e || window.event;
+  //       // 兼容IE8和Firefox 4之前的版本
+  //       if (e) {
+  //         e.returnValue = '关闭提示';
+  //       }
+  //       // Chrome, Safari, Firefox 4+, Opera 12+ , IE 9+
+  //       return '关闭提示';
+  //     };
+  //   },
+  //   destroyed() {
+  //     window.onbeforeunload = null;
+  //   },
   async created() {
     if (
       window.localStorage.getItem('user_id') == '' ||
@@ -254,8 +318,14 @@ export default {
       // 重定向到登录页
       this.$router.push('/login');
     } else if (res.status == 200) {
-      this.tableName = [];
+      this.problem = [];
+      for (let i = 0; i < res.data.problems.length; i++) {
+        this.problem.push(res.data.problems[i]);
+        this.answer[i] = '';
+      }
+      this.all = res.data.problems.length;
 
+      this.tableName = [];
       for (let i = 0; i < res.data.tables.length; i++) {
         this.tableName.push(res.data.tables[i].tableName);
 
@@ -307,4 +377,8 @@ export default {
   }
 };
 </script>
-<style scoped></style>
+<style scoped>
+.el-button-group {
+  margin-top: 10px;
+}
+</style>

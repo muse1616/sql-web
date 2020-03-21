@@ -9,19 +9,24 @@
       >
     </el-breadcrumb>
     <h1>学生端</h1>
-    <blockquote >
+    <blockquote>
       实验过程中,学生使用表格为临时创建用表,且前后对表的操作会互相影响，使用刷新按钮可重置表格,作答时，无需关注多余空格或答案前后的空格,在批改时系统会自动校验空格的数量
     </blockquote>
     <el-divider></el-divider>
     <h1>教师端</h1>
-     <blockquote >
-        教师账号在管理员添加后,自动生成一系列管理班级、数据库、实验的表格,无需手动创建,在创建表时,应避免使用双下划线作为表名
-       开头,默认为系统自带表格,在创建表的数据单元时,禁止使用'$$$'这一字符组合
+    <blockquote>
+      教师账号在管理员添加后,自动生成一系列管理班级、数据库、实验的表格,无需手动创建,在创建表时,应避免使用双下划线作为表名
+      开头,默认为系统自带表格,在创建表的数据单元时,禁止使用'$$$'这一字符组合
     </blockquote>
-   <el-divider></el-divider>
+    <el-divider></el-divider>
     <h1>源码</h1>
-     <blockquote >
-       
+    <blockquote>
+      <h3>前端: https://github.com/muse1616/sql-web</h3>
+      <h5>vue+elementUI+axios</h5>
+    </blockquote>
+    <blockquote>
+      <h3>后端: https://github.com/muse1616/sql-api-server</h3>
+      <h5>nodejs+express+mysql</h5>
     </blockquote>
   </div>
 </template>

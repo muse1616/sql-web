@@ -76,19 +76,33 @@ export default {
   methods: {
     // 退出登录
     logout() {
-      // 清空sessionStorage
-      window.sessionStorage.clear();
-      window.localStorage.clear();
-      // 重定向到登录页
-      this.$router.push('/login');
+      this.$confirm('退出登录？是否继续', '提示', {
+        distinguishCancelAndClose: true,
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          // 清空sessionStorage
+          window.sessionStorage.clear();
+          window.localStorage.clear();
+          // 重定向到登录页
+          this.$router.push('/login');
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          });
+        });
     }
   },
   created() {
-      console.log(this.id)
-      if(this.id==null){
-           // 重定向到登录页
+    console.log(this.id);
+    if (this.id == null) {
+      // 重定向到登录页
       this.$router.push('/login');
-      }
+    }
   }
 };
 </script>

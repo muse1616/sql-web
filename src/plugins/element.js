@@ -44,7 +44,8 @@ import {
     Transfer,
     DatePicker,
     Drawer,
-    InputNumber
+    InputNumber,
+    Progress
 } from 'element-ui'
 
 
@@ -89,6 +90,7 @@ Vue.use(Transfer)
 Vue.use(DatePicker)
 Vue.use(Drawer)
 Vue.use(InputNumber)
+Vue.use(Progress)
 
 // 消息弹窗需要全局挂载
 Vue.prototype.$message = Message

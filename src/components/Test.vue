@@ -267,36 +267,36 @@ export default {
       }
     }
   },
-  //   beforeRouteLeave: function(to, from, next) {
-  //     next(false);
-  //     this.$confirm('您将离开本页面，作答记录不会保存,继续离开？', '提示', {
-  //       distinguishCancelAndClose: true,
-  //       confirmButtonText: '确定',
-  //       cancelButtonText: '取消',
-  //       type: 'warning'
-  //     })
-  //       .then(() => {
-  //         //   删除临时表
-  //         //   可以不进行删除？
+  beforeRouteLeave: function(to, from, next) {
+    next(false);
+    this.$confirm('您将离开本页面，作答记录不会保存,继续离开？', '提示', {
+      distinguishCancelAndClose: true,
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+      .then(() => {
+        //   删除临时表
+        //   可以不进行删除？
 
-  //         next();
-  //       })
-  //       .catch(() => {});
-  //   },
-  //   mounted() {
-  //     window.onbeforeunload = function(e) {
-  //       e = e || window.event;
-  //       // 兼容IE8和Firefox 4之前的版本
-  //       if (e) {
-  //         e.returnValue = '关闭提示';
-  //       }
-  //       // Chrome, Safari, Firefox 4+, Opera 12+ , IE 9+
-  //       return '关闭提示';
-  //     };
-  //   },
-  //   destroyed() {
-  //     window.onbeforeunload = null;
-  //   },
+        next();
+      })
+      .catch(() => {});
+  },
+  mounted() {
+    window.onbeforeunload = function(e) {
+      e = e || window.event;
+      // 兼容IE8和Firefox 4之前的版本
+      if (e) {
+        e.returnValue = '关闭提示';
+      }
+      // Chrome, Safari, Firefox 4+, Opera 12+ , IE 9+
+      return '关闭提示';
+    };
+  },
+  destroyed() {
+    window.onbeforeunload = null;
+  },
   async created() {
     if (
       window.localStorage.getItem('user_id') == '' ||

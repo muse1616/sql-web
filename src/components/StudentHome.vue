@@ -12,7 +12,7 @@
       <!-- 侧边栏 -->
       <el-aside width="200px">
         <el-menu :router="true">
-          <el-submenu index=''>
+          <el-submenu index="">
             <template slot="title">
               <i class="el-icon-s-order"></i>
               <span>实验列表</span>
@@ -30,10 +30,6 @@
             <span slot="title">作答情况</span>
           </el-menu-item>
 
-          <el-menu-item index="/student/home/test/grade">
-            <i class="el-icon-s-data"></i>
-            <span slot="title">成绩</span>
-          </el-menu-item>
 
           <el-menu-item index="/student/home/profile">
             <i class="el-icon-user-solid"></i>
@@ -56,12 +52,10 @@
         </div>
       </el-aside>
       <!-- 右侧内容区域 -->
-      <div id="logout_button">
-      
-      </div>
+      <div id="logout_button"></div>
       <el-main>
-          <!-- 路由占位符 -->
-          <router-view></router-view>
+        <!-- 路由占位符 -->
+        <router-view></router-view>
       </el-main>
     </el-container>
   </el-container>
@@ -81,11 +75,25 @@ export default {
   methods: {
     // 退出登录
     logout() {
-      // 清空sessionStorage
-      window.sessionStorage.clear();
-      window.localStorage.clear();
-      // 重定向到登录页
-      this.$router.push('/login');
+      this.$confirm('退出登录？是否继续', '提示', {
+        distinguishCancelAndClose: true,
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          // 清空sessionStorage
+          window.sessionStorage.clear();
+          window.localStorage.clear();
+          // 重定向到登录页
+          this.$router.push('/login');
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          });
+        });
     }
   },
   async created() {

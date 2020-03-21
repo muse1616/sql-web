@@ -15,10 +15,9 @@ const TeacherProfile = () => import('../components/TeacherProfile.vue')
 const ExperimentManagement = () => import('../components/ExperimentManagement.vue')
 const StudentHome = () => import('../components/StudentHome.vue')
 const StudentProfile = () => import('../components/StudentProfile.vue')
-const MyGrade = () => import('../components/MyGrade.vue')
 const TestHistory = () => import('../components/TestHistory.vue')
-const TestInfo = ()=>import('../components/TestInfo.vue')
-const Test = ()=>import('../components/Test.vue')
+const TestInfo = () => import('../components/TestInfo.vue')
+const Test = () => import('../components/Test.vue')
 
 const routes = [
   // 默认重定向
@@ -71,27 +70,24 @@ const routes = [
     name: '/student/home',
     component: StudentHome,
     children: [{
-      path: 'profile',
-      component: StudentProfile
-    },{
-      path: 'help',
-      component: Help
-    },{
-      path:'test/grade',
-      component:MyGrade
-    },{
-      path:'test/history',
-      component:TestHistory
-    },
-    {
-      path:'test/get/:test_name',
-      component:TestInfo
-    },
-    {
-      path:'test/start/:test_name',
-      component:Test
-    }
-  ]
+        path: 'profile',
+        component: StudentProfile
+      }, {
+        path: 'help',
+        component: Help
+      }, {
+        path: 'test/history',
+        component: TestHistory
+      },
+      {
+        path: 'test/get/:test_name',
+        component: TestInfo
+      },
+      {
+        path: 'test/start/:test_name',
+        component: Test
+      }
+    ]
   }
 ]
 

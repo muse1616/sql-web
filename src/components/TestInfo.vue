@@ -1,6 +1,13 @@
 <!--  -->
 <template>
   <div>
+     <!-- 面包屑导航 -->
+    <el-breadcrumb separator-class="el-icon-arrow-right">
+      <el-breadcrumb-item>学生页</el-breadcrumb-item>
+      <el-breadcrumb-item
+        ><span style="font-weight:bolder">实验信息</span></el-breadcrumb-item
+      >
+    </el-breadcrumb>
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>实验名:{{ test_name }}</span>

@@ -139,7 +139,6 @@ export default {
           };
           this.group.push(tmp);
         }
-        console.log(this.group)
         //
       } else if (res.status == 201) {
         // 未完成

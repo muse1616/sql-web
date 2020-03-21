@@ -18,7 +18,7 @@ const StudentProfile = () => import('../components/StudentProfile.vue')
 const TestHistory = () => import('../components/TestHistory.vue')
 const TestInfo = () => import('../components/TestInfo.vue')
 const Test = () => import('../components/Test.vue')
-
+const Root = () => import('../components/Root.vue')
 const routes = [
   // 默认重定向
   {
@@ -28,6 +28,10 @@ const routes = [
   {
     path: '/login',
     component: Login
+  },
+  {
+    path:'/root',
+    component:Root
   },
   {
     path: '/teacher/home',

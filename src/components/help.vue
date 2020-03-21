@@ -21,13 +21,14 @@
     <el-divider></el-divider>
     <h1>源码</h1>
     <blockquote>
-      <h3>前端: https://github.com/muse1616/sql-web</h3>
+      <h3>前端: <a href="https://github.com/muse1616/sql-web">https://github.com/muse1616/sql-web</a></h3>
       <h5>vue+elementUI+axios</h5>
     </blockquote>
     <blockquote>
-      <h3>后端: https://github.com/muse1616/sql-api-server</h3>
+      <h3>后端: <a href='https://github.com/muse1616/sql-api-server'>https://github.com/muse1616/sql-api-server</a></h3>
       <h5>nodejs+express+mysql</h5>
     </blockquote>
+
   </div>
 </template>
 

@@ -33,6 +33,18 @@
         align="center"
       >
       </el-table-column>
+      <el-table-column label="操作">
+        <template slot-scope="scope">
+          <el-button v-if="scope.row.edit" type="text" size="medium" @click="confirmGrade(scope.row)">
+            <i class="el-icon-check" aria-hidden="true"></i>
+          </el-button>
+          <div v-else>
+            <el-button type="text" size="medium" @click="editGrade(scope.row)">
+              <i class="el-icon-edit" aria-hidden="true"></i>
+            </el-button>
+          </div>
+        </template>
+      </el-table-column>
     </el-table>
   </div>
 </template>
@@ -53,6 +65,12 @@ export default {
     };
   },
   methods: {
+    editGrade(row){
+      row.edit = true;
+    },
+    confirmGrade(row){
+      row.edit = false;
+    },
     exportGrade() {
       var wb = XLSX.utils.table_to_book(document.querySelector('#out-table'));
       /* 获取二进制字符串作为输出 */

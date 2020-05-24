@@ -47,7 +47,7 @@
         </el-menu>
         <div id="current_id">
           <div>当前账号:</div>
-          <div>{{ id }}</div>
+          <div>{{ user_name }}</div>
         </div>
       </el-aside>
       <!-- 右侧内容区域 -->
@@ -70,7 +70,8 @@ export default {
   data() {
     return {
       // 接受参数
-      id: window.localStorage.getItem('user_id')
+      id: window.localStorage.getItem('user_id'),
+      user_name: window.localStorage.getItem('user_name')
     };
   },
   methods: {

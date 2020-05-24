@@ -176,8 +176,7 @@ export default {
 
       const { data: res } = await this.$http.post('test/submit', {
         id: window.localStorage.getItem('user_id'),
-        teacher_id: window.localStorage.getItem('teacher_id'),
-        test_name: this.$route.params.test_name,
+        test_id: this.$route.params.test_name,
         answer: this.answer
       });
       // 渲染结果
@@ -253,8 +252,7 @@ export default {
       // 创建临时表库
       const { data: r } = await this.$http.post('/test/createTmpTable', {
         id: window.localStorage.getItem('user_id'),
-        teacher_id: window.localStorage.getItem('teacher_id'),
-        test_name: this.$route.params.test_name
+        test_id: this.$route.params.test_name
       });
       if (r.status == 202) {
         this.$message.error('登录状态已失效!请先登录');
@@ -299,8 +297,7 @@ export default {
   },
   async created() {
     if (
-      window.localStorage.getItem('user_id') == '' ||
-      window.localStorage.getItem('teacher_id') == ''
+      window.localStorage.getItem('user_id') == ''
     ) {
       this.$message.error('登录状态已失效!请先登录');
       // 重定向到登录页
@@ -309,7 +306,6 @@ export default {
 
     //   请求实验数据
     const { data: res } = await this.$http.post('testing', {
-      teacher_id: window.localStorage.getItem('teacher_id'),
       test_name: this.$route.params.test_name
     });
 
@@ -361,8 +357,7 @@ export default {
       // 创建临时表库
       const { data: r } = await this.$http.post('/test/createTmpTable', {
         id: window.localStorage.getItem('user_id'),
-        teacher_id: window.localStorage.getItem('teacher_id'),
-        test_name: this.$route.params.test_name
+        test_id: this.$route.params.test_name
       });
       if (r.status == 202) {
         this.$message.error('登录状态已失效!请先登录');

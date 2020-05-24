@@ -60,7 +60,7 @@
           <!-- 学生表格 -->
           <el-table :data="student[index]" style="width: 100%">
             <el-table-column
-              prop="id"
+              prop="student_id"
               label="学号"
               align="center"
               width="200px"
@@ -99,7 +99,7 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="学号">
-          <el-input v-model="singleStudent.id" autocomplete="off"></el-input>
+          <el-input v-model="singleStudent.student_id" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="姓名">
           <el-input v-model="singleStudent.name" autocomplete="off"></el-input>
@@ -107,7 +107,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="closeAddStudentDialog">取 消</el-button>
-        <el-button type="primary" @click="submitAdd">确 定</el-button>
+        <el-button type="primary" @click="submitAdd()">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -156,6 +156,7 @@ export default {
   data() {
     return {
       id: window.localStorage.getItem('user_id'),
+      user_name: window.localStorage.getItem('user_name'),
       class: [],
       tableData: [],
       index: '0',
@@ -165,7 +166,8 @@ export default {
       singleStudent: {
         id: '',
         name: '',
-        class: ''
+        class: '',
+        class_key: ''
       },
       formLabelWidth: '120px',
       classXls: [],
@@ -285,11 +287,17 @@ export default {
     },
     submitAdd() {
       if (
-        this.singleStudent.id == '' ||
+        this.singleStudent.student_id == '' ||
         this.singleStudent.name == '' ||
         this.singleStudent.class == ''
       ) {
         return this.$message.error('信息填写不完整');
+      }
+      for (let i=0;i<this.tableData.length;i++){
+        if(this.tableData[i].id == this.singleStudent.class){
+          this.singleStudent.class_key = this.tableData[i].key;
+          break;
+        }
       }
       // 提交信息
       this.$confirm('添加该学生同时为其注册, 是否继续?', '提示', {
@@ -330,11 +338,12 @@ export default {
     closeAddStudentDialog() {
       this.dialogFormVisible = false;
       // 清空表单内容
-      this.singleStudent.id = '';
+      this.singleStudent.student_id = '';
       this.singleStudent.name = '';
       this.singleStudent.class = '';
     },
     addOneStudent(row) {
+      console.log('row:'+row);
       this.singleStudent.class = row.id;
       this.dialogFormVisible = true;
     },
@@ -350,8 +359,7 @@ export default {
       )
         .then(async () => {
           const { data: res } = await this.$http.post('delete/class', {
-            id: this.id,
-            class_id: row.id
+            id: row.key
           });
           if (res.status == 200) {
             this.$message.success('删除成功');
@@ -384,7 +392,6 @@ export default {
         .then(async () => {
           // console.log(row.id);
           const { data: res } = await this.$http.post('delete/student', {
-            id: this.id,
             student_id: row.id
           });
           if (res.status == 200) {
@@ -421,6 +428,7 @@ export default {
       // console.log(res.data[0]);
       for (let i = 0; i < res.data.length; i++) {
         let AClass = {};
+        AClass.key = res.data[i].id;
         AClass.id = res.data[i].class_id;
         AClass.number = res.data[i].student.length;
         this.tableData.push(AClass);

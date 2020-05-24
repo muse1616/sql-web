@@ -49,7 +49,7 @@
 
     <el-divider></el-divider>
 
-    <el-form :model="experiment" label-width="80px">
+    <el-form :model="experiment" label-width="100px">
       <el-form-item label="实验名称">
         <el-input v-model="experiment.name" disabled> </el-input>
       </el-form-item>
@@ -61,7 +61,7 @@
       </el-form-item>
 
       <el-form-item label="关联库表">
-        <el-input v-model="experiment.table" disabled> </el-input>
+        <el-input v-model="experiment.exp_table" disabled> </el-input>
       </el-form-item>
 
       <el-form-item label="实验日期">
@@ -78,20 +78,27 @@
         </el-date-picker
       ></el-form-item>
       <div v-for="(item, index) in experiment.group" :key="index">
-        <el-form-item :label="`题目:${index + 1}`">
+        <el-form-item :label="`第${index + 1}题题目`">
           <el-input
             v-model="experiment.group[index].problem"
             :disabled="!ifEdit"
           >
           </el-input>
         </el-form-item>
-        <el-form-item :label="`答案:${index + 1}`">
+        <el-form-item :label="`第${index + 1}题答案`">
           <el-input
             v-model="experiment.group[index].answer"
             :disabled="!ifEdit"
           >
           </el-input>
         </el-form-item>
+          <el-form-item :label="`第${index + 1}题分值`">
+              <el-input
+                      v-model="experiment.group[index].score"
+                      :disabled="!ifEdit"
+              >
+              </el-input>
+          </el-form-item>
       </div>
     </el-form>
   </div>
@@ -137,10 +144,10 @@ export default {
         .then(async () => {
           this.experiment.reachTime = this.dateArr[0];
           this.experiment.deadline = this.dateArr[1];
-          
+
           // 请求
           const { data: res } = await this.$http.post('experiment/edit', {
-            id: this.id,
+            teacher_id: this.id,
             name: this.current_experiment,
             experiment: this.experiment
           });

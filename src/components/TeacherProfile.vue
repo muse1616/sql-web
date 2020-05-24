@@ -13,7 +13,7 @@
     <el-card class="box-card">
       <el-form ref="ref" :model="form" label-width="80px" :rules="formRules">
         <el-form-item label="当前账号">
-          <el-input v-model="form.id" disabled=""></el-input>
+          <el-input v-model="form.teacher_id" disabled=""></el-input>
         </el-form-item>
 
         <!-- 当前密码 -->

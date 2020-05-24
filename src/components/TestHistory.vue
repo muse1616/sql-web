@@ -14,8 +14,8 @@
       <el-option
         v-for="item in options"
         :key="item.value"
-        :label="item.label"
-        :value="item.value"
+        :label="item.label.name"
+        :value="item.label.id"
       >
       </el-option>
     </el-select>
@@ -27,51 +27,56 @@
       style="margin-top:10px;min-height:300px"
     >
       <div slot="header" class="clearfix">
-        <span>实验名称:{{ value }}</span>
+        <span>实验名称:{{ exp_name }}</span>
       </div>
       <div v-if="show == true">
         <div>
           <el-row>
             <el-col :span="3">
               <span style="font-weight:bolder;color:#409EFF;font-size:24px"
-                >成绩:</span
+              >成绩:</span
               >
             </el-col>
-            <el-col :span="10">
+            <el-col :span="5">
               <el-progress
-                :text-inside="true"
-                :stroke-width="26"
-                :percentage="grade"
-                style="width:50%"
+                      :text-inside="true"
+                      :stroke-width="26"
+                      :percentage="grade"
               ></el-progress>
+            </el-col>
+            <el-col :span="5">
+              <span>成绩构成</span>
+              <div id="grade-pie" style="width: 600px;height:400px;"></div>
             </el-col>
             <el-col :span="11">
               <span style="font-weight:bolder;color:#409EFF;font-size:24px"
-                >提交时间: {{ subTime }}</span
+              >提交时间: {{ group[0].subTime }}</span
               >
             </el-col>
           </el-row>
-
           <el-divider></el-divider>
 
           <div v-for="(index, i) in group" :key="i" style="margin-top:20px">
-            <el-input v-model="index.problem"
+            <el-input v-model="index.test" disabled
               ><template slot="prepend">问题</template></el-input
             >
-            <el-input v-model="index.answer" style="margin-top:5px"
+            <el-input v-model="index.answer" style="margin-top:5px" disabled
               ><template slot="prepend">作答</template>
               <template slot="append">
                 <i
                   class="el-icon-close"
                   title="错误"
-                  v-if="index.result == 'n'"
+                  v-if="index.isCorrect == 0"
                 ></i>
                 <i
                   class="el-icon-check"
-                  v-if="index.result == 'y'"
+                  v-if="index.isCorrect == 1"
                   title="正确"
                 ></i> </template
             ></el-input>
+            <el-input v-model="index.mark" disabled
+            ><template slot="prepend">本题分值</template></el-input
+            >
 
             <el-divider></el-divider>
 
@@ -91,12 +96,17 @@ export default {
       id: window.localStorage.getItem('user_id'),
       teacher_id: window.localStorage.getItem('teacher_id'),
       value: '',
+      exp_name: '',
       options: [],
       noMsg: false,
       show: false,
       grade: '',
-      subTime: '',
-      group: []
+      group: [],
+      mark : [],
+      test : [],
+      answer : [],
+      isCorrect : [],
+      subTime : []
     };
   },
   methods: {},
@@ -109,8 +119,7 @@ export default {
       this.subTime = null;
       const { data: res } = await this.$http.post('student/getGrade', {
         id: this.id,
-        teacher_id: this.teacher_id,
-        test_name: this.value
+        test_id: this.value
       });
       //   状态码判断
       if (res.status == 202) {
@@ -118,28 +127,11 @@ export default {
         // 重定向到登录页
         this.$router.push('/login');
       } else if (res.status == 200) {
-        console.log(res.data);
         //   渲染数据
         this.show = true;
-        this.grade = res.data.grade;
-        this.subTime = res.data.timeSub;
-        // 切割answer
-        let arr = res.data.answer.split('$$$');
-        arr.pop();
-        // 结果
-        let arr2 = res.data.isCorrect.split('$$$');
-        arr2.pop();
-        res.data.answer = arr;
-        res.data.isCorrect = arr2;
-        for (let i = 0; i < res.data.problem.length; i++) {
-          let tmp = {
-            problem: res.data.problem[i],
-            answer: res.data.answer[i],
-            result: res.data.isCorrect[i]
-          };
-          this.group.push(tmp);
-        }
-        //
+        this.exp_name = res.data.exp_name;
+        this.group = res.data.output;
+        this.grade = res.data.full_mark;
       } else if (res.status == 201) {
         // 未完成
         this.noMsg = true;
@@ -152,6 +144,7 @@ export default {
     }
   },
   async created() {
+    let myChart = echarts.init(document.getElementById('grade-pie'));
     //   获取实验列表
     if (this.id == null) {
       // 重定向到登录页
@@ -159,7 +152,7 @@ export default {
     }
     // 获取当前可见的实验列表
     const { data: res } = await this.$http.post('getVisibleExperiment', {
-      teacher_id: this.teacher_id
+      student_id: this.id
     });
     // 状态码判断
     if (res.status == 202) {

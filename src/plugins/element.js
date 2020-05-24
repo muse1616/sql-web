@@ -45,7 +45,11 @@ import {
     DatePicker,
     Drawer,
     InputNumber,
-    Progress
+    Progress,
+    CheckboxGroup,
+    Checkbox,
+    CheckboxButton,
+    Radio
 } from 'element-ui'
 
 
@@ -91,6 +95,10 @@ Vue.use(DatePicker)
 Vue.use(Drawer)
 Vue.use(InputNumber)
 Vue.use(Progress)
+Vue.use(Checkbox)
+Vue.use(CheckboxGroup)
+Vue.use(CheckboxButton)
+Vue.use(Radio)
 
 // 消息弹窗需要全局挂载
 Vue.prototype.$message = Message

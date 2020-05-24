@@ -115,14 +115,13 @@ export default {
         // 判断账号类型 通过编程式导航跳转到主页
         if (this.t == 'teacher') {
           window.localStorage.setItem('user_id', res.meta.data.id);
+          window.localStorage.setItem('user_name', res.meta.data.teacher_name);
           this.$router.push({ name: '/teacher/home', params: res.meta.data });
         }
         // 学生
         if (this.t == 'student') {
           window.localStorage.setItem('user_id', res.meta.data.id);
-          window.localStorage.setItem('class_id', res.meta.data.class_id);
-          window.localStorage.setItem('name', res.meta.data.name);
-          window.localStorage.setItem('teacher_id', res.meta.data.teacher_id);
+          window.localStorage.setItem('user_name', res.meta.data.student_name);
           this.$router.push({ name: '/student/home', params: res.meta.data });
         }
       });

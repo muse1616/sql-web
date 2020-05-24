@@ -42,6 +42,12 @@
                             <el-form-item label="实验名称" prop="name">
                                 <el-input v-model="form_step1.name"></el-input>
                             </el-form-item>
+                            <el-form-item label="实验类型" prop="type">
+                                <template>
+                                    <el-radio v-model="form_step1.type" label="0">实践类</el-radio>
+                                    <el-radio v-model="form_step1.type" label="1">设计类</el-radio>
+                                </template>
+                            </el-form-item>
                             <el-form-item label="实验目的" prop="aim">
                                 <el-input
                                         type="textarea"
@@ -61,7 +67,7 @@
                         </el-form>
                     </div>
                     <!-- 步骤2 -->
-                    <div v-if="step == 2" style="margin-left:40px">
+                    <div v-if="step == 2 && form_step1.type != 1" style="margin-left:40px">
                         <el-transfer
                                 v-model="value"
                                 :data="data"
@@ -183,7 +189,7 @@
 
                         <el-collapse style="margin-top:10px">
                             <el-collapse-item
-                                    :title="`题目:${index + 1}`"
+                                    :title="`第${index + 1}题`"
                                     v-for="(i, index) in p_count"
                                     :key="index"
                             >
@@ -204,6 +210,11 @@
                                             >
                                                 <i class="el-icon-plus"></i>
                                             </el-tooltip>
+                                        </el-input>
+                                    </el-form-item>
+
+                                    <el-form-item label="分值">
+                                        <el-input v-model="group[index].score" style="max-width: 20%">
                                         </el-input>
                                     </el-form-item>
                                 </el-form>
@@ -239,19 +250,18 @@
         ></el-button>
         <el-steps :active="step" align-center style="margin-top:30px">
             <el-step
-                    title="步骤1"
+                    title="步骤"
                     description="填写实验名称、实验目的(可选)、实验描述(可选)"
             ></el-step>
-            <el-step title="步骤2" description="选择关联库表"></el-step>
-            <el-step title="步骤3" description="选择可见日期、截止日期"></el-step>
-            <el-step title="步骤4" description="填写题目及答案"></el-step>
+            <el-step title="xia" description="选择关联库表" v-if="form_step1.type != 1"></el-step>
+            <el-step title="步骤" description="选择可见日期、截止日期"></el-step>
+            <el-step title="步骤" description="填写题目及答案"></el-step>
         </el-steps>
     </div>
 </template>
 
 <script>
     import format from '../utils/date';
-
     export default {
         data() {
             return {
@@ -262,6 +272,7 @@
                 step: 1,
                 form_step1: {
                     name: '',
+                    type: '',
                     aim: '',
                     desc: ''
                 },
@@ -280,7 +291,8 @@
                 group: [
                     {
                         problem: '',
-                        answer: ''
+                        answer: '',
+                        score: ''
                     }
                 ]
             };
@@ -301,6 +313,7 @@
         },
         methods: {
             analyzeSql(sql) {
+                console.log("in:"+sql);
                 sql = sql.toString();
                 // 判断sql
                 // 1.数量
@@ -477,14 +490,14 @@
                     });
             },
             async runSql() {
-              console.log(typeof this.analyzeSql(this.sql_test).type);
-                if (String(this.analyzeSql(this.sql_test).type) === "NULL") {
+              console.log(this.analyzeSql(this.sql_test));
+                if (String(this.analyzeSql(this.sql_test).type[0]) === "NULL") {
                     return this.$message({
                         type: 'warning',
                         message: '无法解析的语句，请确认语法正确性'
                     });
                 }
-                if (this.analyzeSql(this.sql_test).type !== "DML") {
+                if (this.analyzeSql(this.sql_test).type[0] !== "DML") {
                     return this.$message({
                         type: 'warning',
                         message: '暂不支持DML以外的语句'

@@ -7,6 +7,8 @@ import App from './App.vue'
 import router from './router'
 // 引入element-ui
 import './plugins/element.js'
+import myCharts from './comm/js/myCharts.js'
+Vue.use(myCharts)
 // 导入全局样式
 import './assets/css/global.css'
 // 导入axios

@@ -84,8 +84,8 @@ const routes = [
         component: TestHistory
       },
       {
-        path: 'test/get/:test_name',
-        component: TestInfo
+        path: 'test/get/:test_id',
+        component: ()=>import('@/components/TestInfo.vue')
       },
       {
         path: 'test/start/:test_name',

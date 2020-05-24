@@ -178,7 +178,7 @@
                                 :key="row.key"
                                 :prop="'rows.' + index + '.column_length'"
                         >
-                          <el-input v-model="row.column_length" :disabled="tableSubmitted || !(row.column_type == 'VARCHAR'||row.column_type == 'DECIMAL')"></el-input>
+                          <el-input v-model="row.column_length" :disabled="tableSubmitted || !(row.column_type == 'VARCHAR'||row.column_type == 'INT')"></el-input>
                         </el-form-item>
                       </el-col>
                       <el-col :span="8">
@@ -222,7 +222,7 @@
                                      :key="index"
                                      v-if="item.column_name != 'id'">
                       <template slot-scope="scope">
-                        <el-input v-if="scope.row.edit && (item.column_type == 'VARCHAR' || item.column_type == 'DECIMAL')"
+                        <el-input v-if="scope.row.edit && (item.column_type == 'VARCHAR' || item.column_type == 'INT')"
                                   type="text"
                                   v-model="scope.row[item.column_name]"
                                   :placeholder="scope.row[item.column_name]"
@@ -273,8 +273,8 @@ export default {
       value: 'VARCHAR',
       label: 'VARCHAR'
     }, {
-      value: 'DECIMAL',
-      label: 'DECIMAL'
+      value: 'INT',
+      label: 'INT'
     }, {
       value: 'DATETIME',
       label: 'DATETIME'
@@ -443,6 +443,8 @@ export default {
           this.tableData[i + 1] = rowObj;
 
         }
+      } else if(res.status == 400){
+        this.$message.info('您还没有创建任何实验库表');
       } else {
         this.$message.error('服务器错误');
       }

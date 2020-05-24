@@ -10,7 +10,7 @@
     </el-breadcrumb>
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <span>实验名:{{ test_name }}</span>
+        <span>实验名:{{ info.name }}</span>
         <el-button
           style="float: right; padding: 3px 0"
           type="text"
@@ -50,10 +50,13 @@ export default {
     return {
       id: window.localStorage.getItem('user_id'),
       teacher_id: window.localStorage.getItem('teacher_id'),
-      info: {}
+      info: {},
+      test_id: null
     };
   },
+
   methods: {
+
     startTest() {
       this.$confirm('确定开始作答？', '提示', {
         confirmButtonText: '确定',
@@ -61,7 +64,7 @@ export default {
         type: 'warning'
       })
         .then(async () => {
-          this.$router.push('/student/home/test/start/' + this.test_name);
+          this.$router.push('/student/home/test/start/' + this.test_id);
           // console.log(123);
         })
         .catch(() => {
@@ -73,11 +76,16 @@ export default {
     }
   },
   watch: {
-    async test_name(val) {
+    async '$route'(to, from) {
+      //做一些路由变化的响应
+      const {data: res1} = await this.$http.post('getExperimentInfo', {
+        exp_id: this.$route.params.test_id
+      });
+    },
+    async test_id(val) {
       // 请求实验数据
       const { data: res } = await this.$http.post('getExperimentInfo', {
-        teacher_id: this.teacher_id,
-        test_name: this.test_name
+        exp_id: this.test_id
       });
       // 状态码判断
       if (res.status == 202) {
@@ -94,18 +102,20 @@ export default {
     }
   },
   computed: {
-    test_name() {
-      return this.$route.params.test_name;
+    test_id() {
+      return this.$route.params.test_id;
     }
   },
   async created() {
+
+    this.test_id = this.$route.params.test_id;
     if (this.id == null) {
       // 重定向到登录页
       this.$router.push('/login');
     }
     // 获取当前可见的实验列表
     const { data: res } = await this.$http.post('getVisibleExperiment', {
-      teacher_id: window.localStorage.getItem('teacher_id')
+      student_id: window.localStorage.getItem('user_id')
     });
 
     // 状态码判断
@@ -114,25 +124,12 @@ export default {
       // 重定向到登录页
       this.$router.push('/login');
     } else if (res.status == 200) {
-      let a = false;
-      for (let i = 0; i < res.data.length; i++) {
-        if (this.$route.params.test_name == res.data[i]) {
-          a = true;
-          break;
-        }
-      }
-      if (a == false) {
-        this.$message.error('实验名不存在');
-        // 重定向到主页
-        this.$router.push('/student/home');
-      }
     } else {
       return this.$message.error('未知错误');
     }
 
     const { data: res1 } = await this.$http.post('getExperimentInfo', {
-      teacher_id: this.teacher_id,
-      test_name: this.test_name
+      exp_id: this.test_id
     });
     // 状态码判断
     if (res1.status == 202) {

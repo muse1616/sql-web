@@ -18,10 +18,10 @@
               <span>实验列表</span>
             </template>
             <el-menu-item
-              :index="`/student/home/test/get/${i}`"
+              :index="`/student/home/test/get/${i.id}`"
               v-for="(i, index) in testList"
               :key="index"
-              >{{ i }}</el-menu-item
+              >{{ i.name }}</el-menu-item
             >
           </el-submenu>
 
@@ -48,7 +48,7 @@
         </el-menu>
         <div id="current_id">
           <div style="padding-left:5px">欢迎</div>
-          <div>{{ name }}</div>
+          <div>{{ user_name }}</div>
         </div>
       </el-aside>
       <!-- 右侧内容区域 -->
@@ -67,8 +67,7 @@ export default {
     return {
       // 接受参数
       id: window.localStorage.getItem('user_id'),
-      name: window.localStorage.getItem('name'),
-      teacher_id: window.localStorage.getItem('teacher_id'),
+      user_name: window.localStorage.getItem('user_name'),
       testList: []
     };
   },
@@ -103,7 +102,7 @@ export default {
     }
     // 获取当前可见的实验列表
     const { data: res } = await this.$http.post('getVisibleExperiment', {
-      teacher_id: this.teacher_id
+      student_id: window.localStorage.getItem('user_id')
     });
     // 状态码判断
     if (res.status == 202) {

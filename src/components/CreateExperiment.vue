@@ -250,12 +250,26 @@
         ></el-button>
         <el-steps :active="step" align-center style="margin-top:30px">
             <el-step
-                    title="步骤"
+                    title="基本信息"
                     description="填写实验名称、实验目的(可选)、实验描述(可选)"
+                    icon="el-icon-edit"
             ></el-step>
-            <el-step title="xia" description="选择关联库表" v-if="form_step1.type != 1"></el-step>
-            <el-step title="步骤" description="选择可见日期、截止日期"></el-step>
-            <el-step title="步骤" description="填写题目及答案"></el-step>
+            <el-step
+                    title="关联库"
+                    description="选择关联库表"
+                    icon="el-icon-upload"
+                    v-if="form_step1.type != 1"
+            ></el-step>
+            <el-step
+                    title="实验开放时间"
+                    description="选择可见日期、截止日期"
+                    icon="el-icon-time"
+            ></el-step>
+            <el-step
+                    title="出题"
+                    description="填写题目及答案"
+                    icon="el-icon-question"
+            ></el-step>
         </el-steps>
     </div>
 </template>
@@ -313,13 +327,12 @@
         },
         methods: {
             analyzeSql(sql) {
-                console.log("in:"+sql);
                 sql = sql.toString();
                 // 判断sql
                 // 1.数量
                 // 2.类型
                 // a.先转换为小写
-                sql = sql.toLowerCase();
+                // sql = sql.toLowerCase();
                 // b.分割
                 let sqls = sql.split(";");
                 // 若最后一项为空 说明最后一句sql语句加了分号 直接pop
@@ -336,9 +349,9 @@
                 //DDL 数据定义语言 create drop alter
                 //DML 数据操作语言 select insert update delete
                 //DCL 数据控制语言 commit rollback revoke grant
-                const DDL = ["create", "drop", "alter"];
-                const DML = ["select", "insert", "update", "delete"];
-                const DCL = ["commit", "rollback", "revoke", "grant"];
+                const DDL = ["create", "drop", "alter", "CREATE", "DROP", "ALTER"];
+                const DML = ["select", "insert", "update", "delete", "SELECT", "INSERT", "UPDATE", "DELETE"];
+                const DCL = ["commit", "rollback", "revoke", "grant", "COMMIT", "ROLLBACK", "REVOKE", "GRANT"];
                 // 从安全角度出发 暂时只能处理DML类型的操作
                 // 其余操作会对表的关系及数据结构产生不可预知错误 暂时不支持
                 // 按照优先级判断 DDL>DML>DCL
@@ -490,7 +503,6 @@
                     });
             },
             async runSql() {
-              console.log(this.analyzeSql(this.sql_test));
                 if (String(this.analyzeSql(this.sql_test).type[0]) === "NULL") {
                     return this.$message({
                         type: 'warning',

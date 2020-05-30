@@ -160,7 +160,8 @@ export default {
       problem: [],
       count: 1,
       all: null,
-      answer: []
+      answer: [],
+      submit_success: 0
     };
   },
   methods: {
@@ -186,6 +187,7 @@ export default {
         this.$router.push('/login');
       } else if (res.status == 200) {
         this.$message.success('提交成功');
+        this.submit_success = 1;
 
         setTimeout(() => {
           // 重定向到主页
@@ -267,19 +269,20 @@ export default {
   },
   beforeRouteLeave: function(to, from, next) {
     next(false);
-    this.$confirm('您将离开本页面，作答记录不会保存,继续离开？', '提示', {
-      distinguishCancelAndClose: true,
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
-    })
-      .then(() => {
-        //   删除临时表
-        //   可以不进行删除？
-
-        next();
+      this.$confirm('您将离开本页面，作答记录不会保存,继续离开？', '提示', {
+        distinguishCancelAndClose: true,
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       })
-      .catch(() => {});
+              .then(() => {
+                //   删除临时表
+                //   可以不进行删除？
+
+                next();
+              })
+              .catch(() => {});
+
   },
   mounted() {
     window.onbeforeunload = function(e) {

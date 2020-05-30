@@ -9,7 +9,7 @@
       >
     </el-breadcrumb>
 
-    选择实验
+    选择实验:
     <el-select v-model="value" placeholder="请选择">
       <el-option
         v-for="item in options"
@@ -19,6 +19,8 @@
       >
       </el-option>
     </el-select>
+      <span style="margin-left: 100px">成绩构成:</span>
+      <div id="grade-pie" style="width: 100px;height:100px;display: inline-block;margin-left: 20px;"></div>
 
     <!-- 显示区域 -->
     <el-card
@@ -37,16 +39,13 @@
               >成绩:</span
               >
             </el-col>
-            <el-col :span="5">
+            <el-col :span="10">
               <el-progress
                       :text-inside="true"
                       :stroke-width="26"
                       :percentage="grade"
+                      style="width: 50%"
               ></el-progress>
-            </el-col>
-            <el-col :span="5">
-              <span>成绩构成</span>
-              <div id="grade-pie" style="width: 600px;height:400px;"></div>
             </el-col>
             <el-col :span="11">
               <span style="font-weight:bolder;color:#409EFF;font-size:24px"
@@ -106,12 +105,69 @@ export default {
       test : [],
       answer : [],
       isCorrect : [],
-      subTime : []
+      subTime : [],
+      echartsOption : {
+        backgroundColor: '#ffffff',
+
+        tooltip: {
+          trigger: 'item',
+          formatter: '{a} <br/>{b} : {c} ({d}%)'
+        },
+
+        visualMap: {
+          show: false,
+          min: 0,
+          max: 100,
+          inRange: {
+            colorLightness: [0, 1]
+          }
+        },
+        series: [
+          {
+            name: '成绩构成',
+            type: 'pie',
+            radius: '70%',
+            center: ['50%', '50%'],
+            data: [],
+            // data: [
+            //   {value: 335, name: '直接访问'},
+            //   {value: 310, name: '邮件营销'},
+            //   {value: 274, name: '联盟广告'},
+            //   {value: 235, name: '视频广告'},
+            //   {value: 400, name: '搜索引擎'}
+            // ].sort(function (a, b) { return a.value - b.value; }),
+            roseType: 'radius',
+            label: {
+              color: 'rgba(255, 255, 255, 0.3)'
+            },
+            labelLine: {
+              lineStyle: {
+                color: 'rgba(255, 255, 255, 0.3)'
+              },
+              smooth: 0.2,
+              length: 10,
+              length2: 20
+            },
+            itemStyle: {
+              color: '#c23531',
+              shadowBlur: 200,
+              shadowColor: 'rgba(0, 0, 0, 0.1)'
+            },
+
+            animationType: 'scale',
+            animationEasing: 'elasticOut',
+            animationDelay: function (idx) {
+              return Math.random() * 200;
+            }
+          },
+        ]
+      }
     };
   },
   methods: {},
   watch: {
     async value(val) {
+
       //   请求实验数据;
       this.noMsg = false;
       this.show = false;
@@ -132,6 +188,17 @@ export default {
         this.exp_name = res.data.exp_name;
         this.group = res.data.output;
         this.grade = res.data.full_mark;
+
+        var echarts = require('echarts');
+        var myChart = echarts.init(document.getElementById('grade-pie'));
+
+        for(let i =0;i<this.group.length;i++){
+          let temp = {};
+          temp.value = this.group[i].mark;
+          temp.name = this.group[i].test;
+          this.echartsOption.series[0].data.push(temp);
+        }
+        myChart.setOption(this.echartsOption);
       } else if (res.status == 201) {
         // 未完成
         this.noMsg = true;
@@ -144,7 +211,7 @@ export default {
     }
   },
   async created() {
-    let myChart = echarts.init(document.getElementById('grade-pie'));
+
     //   获取实验列表
     if (this.id == null) {
       // 重定向到登录页
